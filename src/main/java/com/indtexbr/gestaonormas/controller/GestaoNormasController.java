@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -74,7 +75,7 @@ public class GestaoNormasController {
 
         Optional<Norma> norma = normaRepository.findById(id);
         if(!norma.isEmpty()){
-            if(normaAtualizada.getName()==null)
+            if(normaAtualizada.getName().equals(""))
             {
                 normaAtualizada.setName(norma.get().getName());
             }
@@ -84,7 +85,7 @@ public class GestaoNormasController {
                 normaAtualizada.setData(norma.get().getData());
             }
 
-            if(normaAtualizada.getObs() == null)
+            if(normaAtualizada.getObs().equals(""))
             {
                 normaAtualizada.setObs(norma.get().getObs());
             }
@@ -96,5 +97,9 @@ public class GestaoNormasController {
         return message;
     }
 
-
+    @DeleteMapping("{id}")
+    public String deletaNorma(@PathVariable("id")Long id){
+        normaRepository.deleteById(id);
+        return "ok";
+    }
 }
