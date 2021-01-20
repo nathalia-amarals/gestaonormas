@@ -32,7 +32,7 @@ public class GestaoNormasController {
     }
 
     @PostMapping
-    @RequestMapping(path="/cadastranorma/")
+    //@RequestMapping(path="/cadastranorma/")
     public String createNorma( @RequestParam ("file") MultipartFile file,
                               @RequestParam ("name") String name,
                               @RequestParam ("obs") String obs) throws IOException {
