@@ -33,9 +33,9 @@ public class GestaoNormasController {
 
     @PostMapping
     //@RequestMapping(path="/cadastranorma/")
-    public String createNorma( @RequestParam ("file") MultipartFile file,
-                              @RequestParam ("name") String name,
-                              @RequestParam ("obs") String obs) throws IOException {
+    public String criarNorma(@RequestParam ("file") MultipartFile file,
+                             @RequestParam ("name") String name,
+                             @RequestParam ("obs") String obs) throws IOException {
         Norma norma = new Norma();
         norma.setName(name);
         norma.setObs(obs);
@@ -53,6 +53,47 @@ public class GestaoNormasController {
 //            //return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
             return message;
         }
+    }
+
+    @PutMapping
+    public String atualizaNorma(@RequestParam ("id") Long id,
+                                @RequestParam (name = "file", required = false) MultipartFile file,
+                                @RequestParam (name = "name", required = false) String name,
+                                @RequestParam (name = "obs", required = false) String obs) throws IOException {
+
+        String message = "Norma não pode ser atualizada";
+
+        Norma normaAtualizada = new Norma();
+        normaAtualizada.setId(id);
+        if(file != null)
+        {
+            normaAtualizada.setData(file.getBytes());
+        }
+        normaAtualizada.setName(name);
+        normaAtualizada.setObs(obs);
+
+        Optional<Norma> norma = normaRepository.findById(id);
+        if(!norma.isEmpty()){
+            if(normaAtualizada.getName()==null)
+            {
+                normaAtualizada.setName(norma.get().getName());
+            }
+
+            if(normaAtualizada.getData()==null)
+            {
+                normaAtualizada.setData(norma.get().getData());
+            }
+
+            if(normaAtualizada.getObs() == null)
+            {
+                normaAtualizada.setObs(norma.get().getObs());
+            }
+
+            normaRepository.save(normaAtualizada);
+            message = "Norma Atualizada com sucesso";
+        }
+
+        return message;
     }
 
 
