@@ -27,7 +27,7 @@ public class GestaoNormasController {
     @Autowired
     private PlanejamentoRepository planejamentoRepository;
 
-    @GetMapping("norma")
+    @GetMapping("norma/{id}")
     public Norma getNorma(@PathVariable ("id") Long id){
         Optional<Norma> opNorma = normaRepository.findById(id);
 
@@ -78,7 +78,7 @@ public class GestaoNormasController {
         normaAtualizada.setObs(obs);
 
         Optional<Norma> norma = normaRepository.findById(id);
-        if(!norma.isEmpty()){
+        if(norma.isPresent()){
             if(normaAtualizada.getName().equals(""))
             {
                 normaAtualizada.setName(norma.get().getName());
@@ -105,7 +105,7 @@ public class GestaoNormasController {
     public ResponseEntity deletaNorma(@PathVariable("id")Long id){
         Optional<Norma> normaCadastrada = normaRepository.findById(id);
 
-        if(!normaCadastrada.isEmpty())
+        if(normaCadastrada.isPresent())
         {
             normaRepository.deleteById(id);
             return new ResponseEntity(normaCadastrada,HttpStatus.OK);
@@ -118,7 +118,7 @@ public class GestaoNormasController {
     public ResponseEntity getPlanejamento(@PathVariable ("id") Long id){
         Optional<Planejamento> optionalPlanejamento = planejamentoRepository.findById(id);
 
-        if(!optionalPlanejamento.isEmpty())
+        if(optionalPlanejamento.isPresent())
         {
             return new ResponseEntity(optionalPlanejamento.get(), HttpStatus.OK); //lança nullpointer exception?
         }
@@ -135,7 +135,7 @@ public class GestaoNormasController {
     public ResponseEntity atualizaPlanejamento(@RequestBody Planejamento planejamento) throws IOException {
         Optional<Planejamento> planejamentoCadastrado = planejamentoRepository.findById(planejamento.getId());
 
-        if(!planejamentoCadastrado.isEmpty())
+        if(planejamentoCadastrado.isPresent())
             return new ResponseEntity(planejamentoRepository.save(planejamento), HttpStatus.OK);
 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -145,7 +145,7 @@ public class GestaoNormasController {
     public ResponseEntity deletaPlanejamento(@PathVariable("id")Long id){
         Optional<Planejamento> planejamentoCadastrado = planejamentoRepository.findById(id);
 
-        if(!planejamentoCadastrado.isEmpty())
+        if(planejamentoCadastrado.isPresent())
         {
             planejamentoRepository.deleteById(id);
             return new ResponseEntity(planejamentoCadastrado, HttpStatus.OK);
@@ -153,4 +153,9 @@ public class GestaoNormasController {
 
         return new ResponseEntity(id,HttpStatus.BAD_REQUEST);
     }
+
+//    public static void main (String Args[]){
+//        Norma norma = null;
+//        System.out.println(Optional.ofNullable(norma.getName()).orElse("Foi"));
+//    }
 }
