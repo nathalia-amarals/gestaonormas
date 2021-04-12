@@ -5,6 +5,7 @@ import com.indtexbr.gestaonormas.model.Planejamento;
 import com.indtexbr.gestaonormas.repository.NormaRepository;
 import com.indtexbr.gestaonormas.repository.PlanejamentoRepository;
 import com.indtexbr.gestaonormas.service.FileStorageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("gestaonormas")
 public class GestaoNormasController {
@@ -51,11 +53,9 @@ public class GestaoNormasController {
         try {
             normaRepository.save(norma);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
-//            //return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             return new ResponseEntity(message, HttpStatus.OK);
         } catch (Exception e) {
             message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-//            //return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
             return new ResponseEntity(message, HttpStatus.BAD_REQUEST);
         }
     }
@@ -147,15 +147,15 @@ public class GestaoNormasController {
 
         if(planejamentoCadastrado.isPresent())
         {
-            planejamentoRepository.deleteById(id);
-            return new ResponseEntity(planejamentoCadastrado, HttpStatus.OK);
+            try {
+                planejamentoRepository.deleteById(id);
+                return new ResponseEntity(planejamentoCadastrado, HttpStatus.OK);
+            } catch (Exception e){
+                log.info("Exception: " + e);
+                return new ResponseEntity(planejamentoCadastrado, HttpStatus.OK);
+            }
         }
 
         return new ResponseEntity(id,HttpStatus.BAD_REQUEST);
     }
-
-//    public static void main (String Args[]){
-//        Norma norma = null;
-//        System.out.println(Optional.ofNullable(norma.getName()).orElse("Foi"));
-//    }
 }

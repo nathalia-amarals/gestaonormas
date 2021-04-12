@@ -1,7 +1,6 @@
 package com.indtexbr.gestaonormas.model;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ public class Planejamento {
     @ElementCollection
     @MapKeyColumn(name="name")
     @Column(name="value")
-    @CollectionTable(name="etapa_data", joinColumns=@JoinColumn(name="planejamento_id"))
+    @CollectionTable(name="etapa_data", joinColumns=@JoinColumn(name="planejamento_id",referencedColumnName = "id"))
     private Map<String,String> etapaData = new HashMap<String,String>();
 
     public Long getId() {
